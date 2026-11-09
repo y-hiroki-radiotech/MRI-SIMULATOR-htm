@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="全身の仮想ファントムで、基本〜特殊シーケンスのパラメータを変えたときの画像・撮像時間・SNR・SARの変化を確かめる教育用シミュレーター。Canon／Siemensの名称対応つき。">
+<title>MRIパラメータシミュレーター Pro — 全身・網羅版</title>
+<script>try{var __t=(location.search.match(/[?&]theme=([a-z]+)/)||[])[1]||localStorage.getItem("mrisimTheme")||"warm";if(__t&&__t!=="standard")document.documentElement.setAttribute("data-theme",__t);}catch(e){}</script>
+<style id="book-base">/*__BOOKCSS__*/</style>
+<style id="rt-ui">/*__RTUI__*/</style>
+<style id="rt-theme">/*__THEME__*/</style>
+<style id="pro">
+/* ---- Pro 固有（RadTools トークンに揃える） ---- */
+.content{max-width:1900px!important}
+.pro-top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:stretch;margin-bottom:18px}
+.pro-top>.sim-card{margin:0}
+.pro-top.one{grid-template-columns:minmax(0,1fr)}
+.pro-top.one #sim-setup{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:4px 26px;align-items:start}
+.pro-top.one #sim-setup h2,.pro-top.one #sim-setup .phchips{grid-column:1 / -1}
+.phchips{display:flex;flex-direction:column;gap:6px;margin:6px 0 12px}
+.phrow{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center}
+.phlab{font-size:12px;font-weight:700;color:var(--rt-muted);min-width:84px}
+.phchips .chipbtn{min-height:34px;padding:5px 14px}
+.pro-grid{display:grid;grid-template-columns:minmax(300px,0.9fr) minmax(0,1.15fr) minmax(0,1fr);gap:18px;align-items:start}
+.pro-params .sim-card{margin:0;padding:20px 20px}
+.pro-params .sim-controls{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 16px}
+.pro-side{display:contents}
+.pro-out,.pro-chart{position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto}
+.pro-chart .chartbox{display:block;margin:0}
+
+
+.pro-out .sim-output{margin:0;display:block;padding:14px}
+.pro-chart .sim-output{padding:14px}
+.pro-out .sim-image h3{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.pro-out .sim-image h3 span{font-weight:400;color:var(--rt-muted);font-size:12px}
+.cv{position:relative;line-height:0;background:#08121b;border:1px solid #cad7df;border-radius:4px;overflow:hidden;margin:0 auto}
+.cv canvas{display:block;border:0!important;cursor:crosshair;touch-action:none;max-width:none}
+.cv .lab{position:absolute;left:8px;top:6px;color:#e7fffb;font-size:12px;line-height:1.35;text-shadow:0 0 3px #000;pointer-events:none}
+.cv .lab2{position:absolute;right:8px;bottom:6px;color:#cde;font-size:11.5px;line-height:1.35;text-shadow:0 0 3px #000;pointer-events:none;text-align:right}
+.cv .ori{position:absolute;color:#ffd27a;font-size:12px;text-shadow:0 0 3px #000;pointer-events:none;line-height:1}
+.stage{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.vtools{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;margin:10px 0 0;font-size:13px}
+.vtools label{display:inline-flex;gap:5px;align-items:center}
+.vtools input{accent-color:var(--rt-accent)}
+.vtools button,.chipbtn{border:1px solid var(--rt-line-strong);background:var(--rt-surface);color:var(--rt-ink);border-radius:999px;min-height:32px;padding:4px 13px;font-size:13px;font-weight:600;line-height:1.4}
+.vtools button:hover,.chipbtn:hover{background:var(--rt-accent-soft);border-color:var(--rt-accent);color:var(--rt-accent-dark)}
+.chapter-jumps button.chipbtn{min-height:36px;padding:6px 16px}
+.chipbtn[aria-pressed=true]{background:var(--rt-accent);border-color:var(--rt-accent);color:#fff}
+.thumbs{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.thumbs button{border:2px solid transparent;background:#08121b;padding:0;border-radius:5px;line-height:0;position:relative;overflow:hidden}
+.thumbs button[aria-pressed=true]{border-color:var(--rt-accent)}
+.thumbs button span{position:absolute;left:0;right:0;bottom:0;background:rgba(8,18,27,.72);color:#fff;font-size:10.5px;line-height:1.3;padding:2px 4px;text-align:left}
+.hover{font-size:12.5px;color:var(--rt-ink-2);min-height:22px;margin-top:8px;line-height:1.6}
+.busy{font-size:12px;color:var(--rt-accent-dark);font-weight:700}
+.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:10px}
+.metric{background:var(--rt-surface);border:1px solid var(--rt-line);border-radius:var(--rt-radius-sm);padding:5px 9px;line-height:1.35}
+.metric b{display:block;font-size:15.5px;color:var(--rt-accent-dark);font-variant-numeric:tabular-nums}
+.metric span{font-size:11.5px;color:var(--rt-muted)}
+.metric.bad{background:var(--rt-danger-soft);border-color:var(--rt-danger-line)} .metric.bad b{color:var(--rt-danger)}
+.metric.mid{background:var(--rt-warn-soft);border-color:var(--rt-warn-line)} .metric.mid b{color:var(--rt-warn)}
+ul.warns{list-style:none;margin:10px 0 0;padding:0}
+ul.warns li{border-radius:var(--rt-radius-sm);padding:6px 10px;margin:5px 0;font-size:12.5px;line-height:1.6;border:1px solid}
+ul.warns li.warn{background:var(--rt-warn-soft);border-color:var(--rt-warn-line);color:var(--rt-warn)}
+ul.warns li.err{background:var(--rt-danger-soft);border-color:var(--rt-danger-line);color:var(--rt-danger)}
+ul.warns li.info{background:var(--rt-accent-soft);border-color:var(--rt-accent-line);color:var(--rt-accent-dark)}
+.pgrp{border-top:1px solid var(--rt-line);margin-top:14px}
+.pgrp:first-child{border-top:0;margin-top:0}
+.pgrp>button.grp{display:flex;align-items:center;gap:8px;width:100%;background:none;border:0;padding:12px 0 2px;margin:0;font:inherit;font-size:15px;font-weight:700;color:var(--rt-navy);cursor:pointer;text-align:left}
+.pgrp:first-child>button.grp{padding-top:4px}
+.pgrp>button.grp:hover{color:var(--rt-accent-dark)}
+.pgrp>button.grp .chev{display:inline-block;width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid currentColor;transition:transform .15s;flex:none}
+.pgrp.closed>button.grp .chev{transform:rotate(-90deg)}
+.pgrp>button.grp .gbadge{margin-left:auto;font-size:11px;font-weight:700;color:var(--rt-accent-dark);background:var(--rt-accent-soft);border-radius:999px;padding:0 8px}
+.pgrp>button.grp .gbadge:empty{display:none}
+.pgrp>button.grp .gcnt{font-size:11.5px;font-weight:400;color:var(--rt-muted)}
+.pgrp>.sim-controls{margin-top:10px}
+.pgrp.closed>.sim-controls{display:none}
+.pgrp.closed>button.grp{padding-bottom:8px}
+.gtools{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:-4px 0 10px;font-size:11.5px;color:var(--rt-muted)}
+.gtools button{border:1px solid var(--rt-line-strong);background:var(--rt-surface);color:var(--rt-ink-2);border-radius:999px;padding:2px 10px;font-size:12px;cursor:pointer}
+.gtools button:hover{border-color:var(--rt-accent);color:var(--rt-accent-dark)}
+@media print{ .pgrp.closed>.sim-controls{display:grid} .gtools{display:none} }
+.sim-controls{margin:12px 0 4px}
+.sim-control .val{float:right;display:inline-flex;align-items:baseline;gap:3px}
+.sim-control .val input{width:78px;border:1px solid transparent;border-bottom:1px dotted var(--rt-accent);background:transparent;text-align:right;font:inherit;font-weight:700;color:var(--rt-accent-dark);font-variant-numeric:tabular-nums;padding:0 2px}
+.sim-control .val input:focus{border:1px solid var(--rt-accent);background:var(--rt-surface)}
+.sim-control .val small{font-weight:400;color:var(--rt-muted);font-size:11.5px}
+.sim-control .q{display:inline-block;width:16px;height:16px;line-height:14px;text-align:center;border:1px solid var(--rt-line-strong);border-radius:50%;font-size:11px;font-weight:400;color:var(--rt-muted);margin-left:4px;cursor:help}
+.sim-control.adj .val input{color:var(--rt-warn);border-bottom-color:var(--rt-warn)}
+.sim-control input[type=text]{display:block;width:100%;margin:8px 0 5px;padding:7px;border:1px solid var(--rt-line-strong);border-radius:var(--rt-radius-sm);font:inherit;color:var(--rt-ink)}
+.chk{display:flex;align-items:flex-start;gap:7px;font-size:13px;font-weight:600;color:var(--rt-ink-2);line-height:1.55;padding-top:4px}
+.chk input{accent-color:var(--rt-accent);margin-top:4px}
+.les{display:flex;flex-wrap:wrap;gap:6px 18px;margin:8px 0 2px}
+.vend{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:14px;margin:4px 0 0}
+.vend b{color:var(--rt-navy)}
+.chapter-header .vend b{color:#8fe3df} .chapter-header .vend span{color:#fff}
+.chapter-header .cf.o{background:#1c6b45;color:#e8f5ee;border-color:#2f8f61} .chapter-header .cf.c{background:#7a4f08;color:#fff6e5;border-color:#a06a10} .chapter-header .cf.x{background:#9f2f3b;color:#fdecee;border-color:#c04a57}
+#v-sim .chapter-header{padding:20px 28px 18px;margin-bottom:18px} #v-sim .chapter-header h1{font-size:26px;margin-bottom:4px} #v-sim .chapter-header p{font-size:14.5px;line-height:1.75;margin-bottom:6px} #v-sim .chapter-header p.sim-beginner{margin:8px 0 8px;padding:8px 14px}
+.vend{grid-template-columns:auto 1fr auto 1fr auto 1fr;font-size:13.5px} @media(max-width:1100px){ .vend{grid-template-columns:auto 1fr} }
+.sidebar .nav-btn small{max-width:calc(var(--sbw,300px) - 150px)}
+:root{--sbw:300px}
+@media(min-width:761px){ .layout{grid-template-columns:var(--sbw) minmax(0,1fr)} }
+#sbgrip{position:fixed;top:var(--rt-bar-h,0px);bottom:0;left:calc(var(--sbw) - 4px);width:8px;cursor:col-resize;z-index:20;touch-action:none;background:transparent}
+#sbgrip::after{content:"";position:absolute;left:3px;top:0;bottom:0;width:2px;background:transparent;transition:background .15s}
+#sbgrip:hover::after,#sbgrip:focus-visible::after,body.sbdrag #sbgrip::after{background:var(--rt-accent,#2bb3a8)}
+#sbgrip:focus-visible{outline:none}
+body.sbdrag{cursor:col-resize;user-select:none}
+@media(max-width:760px){ #sbgrip{display:none} }
+@media print{ #sbgrip{display:none} }
+.cf{display:inline-block;font-size:11px;font-weight:700;padding:0 7px;border-radius:999px;margin-left:6px;vertical-align:1px;border:1px solid}
+.cf.o{background:var(--rt-ok-soft);color:var(--rt-ok);border-color:var(--rt-ok-line)} .cf.c{background:var(--rt-warn-soft);color:var(--rt-warn);border-color:var(--rt-warn-line)} .cf.x{background:var(--rt-danger-soft);color:var(--rt-danger);border-color:var(--rt-danger-line)}
+.bar-cell{display:flex;align-items:center;gap:8px}
+.bar-cell i{display:block;height:9px;background:var(--rt-accent);border-radius:3px;opacity:.75}
+.nav-btn small{max-width:110px;overflow:hidden;text-overflow:ellipsis}
+.sidebar .nav-btn{font-size:13.5px;padding:7px 14px}
+.view[hidden]{display:none!important}
+.kfill{margin-top:12px;border:1px solid var(--rt-line);border-radius:8px;background:var(--rt-surface);font-size:12px;color:var(--rt-ink-2)}
+.kfill summary{cursor:pointer;padding:6px 10px;font-weight:700;font-size:12.5px;color:var(--rt-muted)}
+.kfrow{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap;padding:0 12px 12px}
+.kfrow canvas{flex:none;border-radius:4px}
+.kftxt{line-height:1.6;min-width:150px;flex:1} .kftxt .kfmain{font-weight:700;color:var(--rt-ink)} .kftxt .kfleg{margin-top:4px;color:var(--rt-muted);font-size:11.5px}
+@media print{ .kfill{display:none} }
+.chapter-jumps .chipbtn{flex:none;white-space:nowrap}
+@media(max-width:1199px){ .pro-grid{grid-template-columns:minmax(280px,1fr) minmax(0,1.1fr)} .pro-side{display:block;position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto} .pro-out,.pro-chart{position:static;max-height:none;overflow:visible} .pro-chart{margin-top:12px} .pro-top{grid-template-columns:minmax(0,1fr)} .pro-top.one #sim-setup{display:block} }
+@media(max-width:900px){ .pro-grid{grid-template-columns:minmax(0,1fr)} .pro-side{position:static;order:-1;max-height:none;overflow:visible} }
+@media(max-width:760px){ .sim-controls,.pro-params .sim-controls{grid-template-columns:1fr} .metrics{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media print{ .pro-out,.pro-chart,.pro-side{position:static} .vtools,.thumbs{display:none} }
+/* ===== スマートフォン（body.mob：幅 760px 以下） ===== */
+body.mob .topbar{position:static;padding:8px 12px;font-size:13px;gap:8px}
+body.mob .topbar>div:first-child{min-width:0;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body.mob .topbar>div:first-child b{font-size:12.5px}
+body.mob .topbar>div:last-child{flex:none;font-size:12px}
+body.mob .langsw{margin-right:0!important}
+body.mob .topbar>div:last-child>span:not(.langsw){display:none}
+body.mob .topbar .print-button{display:none}
+body.mob .content{padding:0 10px calc(70px + env(safe-area-inset-bottom))}
+body.mob #v-sim>.pro-out{position:sticky;top:0;z-index:30;margin:0 -10px 10px;padding:6px 8px 6px;background:var(--rt-bg);border-bottom:1px solid var(--rt-line);box-shadow:0 6px 14px -10px rgba(0,0,0,.35)}
+body.mob #v-sim>.pro-out .sim-output{padding:6px;margin:0;border-radius:8px}
+body.mob #v-sim>.pro-out .sim-image h3{font-size:12.5px;margin:0 0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body.mob #v-sim>.pro-out .stage{display:flex;justify-content:center}
+body.mob #v-sim>.pro-out .vtools{gap:4px;margin-top:4px;font-size:12px;flex-wrap:nowrap;overflow-x:auto}
+body.mob #v-sim>.pro-out .vtools button{padding:2px 8px;font-size:12px;white-space:nowrap}
+body.mob #v-sim>.pro-out .vtools label{white-space:nowrap}
+body.mob #v-sim>.pro-out #save,body.mob #v-sim>.pro-out #pin{display:none}
+body.mob #v-sim>.pro-out .hover{display:none}
+body.mob #v-sim>.pro-out .thumbs{flex-wrap:nowrap;overflow-x:auto;margin-top:4px}
+body.mob #v-sim>.pro-out .thumbs canvas{max-height:40px}
+body.mob #v-sim>.pro-out .metrics{display:flex;gap:5px;overflow-x:auto;margin-top:5px;padding-bottom:2px;scrollbar-width:none}
+body.mob #v-sim>.pro-out .metrics::-webkit-scrollbar{display:none}
+body.mob #v-sim>.pro-out .metric{flex:none;padding:3px 8px;max-width:150px}
+body.mob #v-sim>.pro-out .metric b{font-size:13.5px}
+body.mob #v-sim>.pro-out .metric span{font-size:10.5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body.mob #v-sim>.pro-out .warns{max-height:3.2em;overflow:auto;font-size:11.5px;margin:4px 0 0}
+body.mob .chapter-header{padding:16px 16px 14px;margin:0 0 10px}
+body.mob .chapter-header h1{font-size:22px}
+body.mob .pro-grid{display:block}
+body.mob .pro-side{position:static;max-height:none;overflow:visible}
+body.mob .sim-card{padding:14px 14px 12px}
+body.mob .pro-params #learncard{margin-bottom:10px}
+/* タブで切り替える部分 */
+body.mob.simview[data-mtab] #v-sim>.chapter-header,body.mob.simview[data-mtab] #v-sim>.notice,body.mob.simview[data-mtab] #protop,body.mob.simview[data-mtab] .pro-params,body.mob.simview[data-mtab] .pro-chart,body.mob.simview[data-mtab] #sim-tissue,body.mob.simview[data-mtab] .footer{display:none}
+body.mob.simview[data-mtab=setup] #protop{display:block}
+body.mob.simview[data-mtab=params] .pro-params{display:block}
+body.mob.simview[data-mtab=chart] .pro-chart{display:block;margin-top:0}
+body.mob.simview[data-mtab=info] #v-sim>.chapter-header,body.mob.simview[data-mtab=info] #v-sim>.notice,body.mob.simview[data-mtab=info] #sim-tissue,body.mob.simview[data-mtab=info] .footer{display:block}
+body.mob.simview[data-mtab=setup] #protop.one #sim-setup,body.mob.simview[data-mtab=setup] #protop #sim-setup{display:block}
+body.mob #protop #learncard{display:none}
+#mtabs{display:none}
+body.mob.simview #mtabs{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:60;background:var(--rt-surface);border-top:1px solid var(--rt-line-strong);padding:4px 4px calc(4px + env(safe-area-inset-bottom));box-shadow:0 -4px 14px -8px rgba(0,0,0,.3)}
+#mtabs button{flex:1;border:0;background:none;padding:9px 2px;font:inherit;font-size:13px;font-weight:700;color:var(--rt-muted);border-radius:8px}
+#mtabs button[aria-pressed=true]{color:var(--rt-accent-dark);background:var(--rt-accent-soft)}
+body.mob .pgrp>button.grp{padding-top:14px;font-size:15.5px}
+body.mob input[type=range]{height:28px}
+body.mob .sim-control input[type=number]{font-size:16px}
+body.mob select{font-size:15px}
+@media print{ #mtabs{display:none!important} }
+
+</style>
+</head>
+<body>
+<a href="#mainContent" style="position:absolute;left:-9999px" onfocus="this.style.left='10px'" onblur="this.style.left='-9999px'">本文へ</a>
+<div class="layout">
+<aside class="sidebar" id="sidebar" aria-label="シーケンスの選択"><div class="brand"><div class="brand-mark">MR</div><div class="brand-name">パラメータシミュレーター Pro</div><div class="brand-meta">院内教育版 · 全身・網羅版 2026.11</div><input id="seqq" class="book-search" type="search" aria-label="シーケンスを検索" placeholder="シーケンス名で検索（HASTE・FASE…）"></div><nav id="navigation"></nav></aside><div id="sbgrip" role="separator" aria-orientation="vertical" aria-label="サイドバーの幅（ドラッグ・左右キーで調整、ダブルクリックで元に戻す）" title="ドラッグで幅を変更／ダブルクリックで元に戻す" tabindex="0"></div>
+<div id="shade" class="mobile-shade"></div>
+<main class="main" id="mainContent"><header class="topbar"><div><button type="button" class="menu-btn" id="menu" aria-label="目次を開く" aria-expanded="false">目次</button> <b>パラメータから画像を考える — 全身版</b></div><div><span>Siemens · Canon · GE · Philips · Fujifilm · United Imaging ／ 0.55・1.5・3 T</span> <label class="themesw"><span>配色</span><select id="themesel" aria-label="配色"><option value="standard">標準</option><option value="clinical">ライト</option><option value="dark">ダーク</option><option value="warm">ウォーム</option></select></label><button type="button" class="print-button" onclick="window.print()">印刷</button></div></header>
+<div class="content" id="content">
+ <div class="view" id="v-sim">
+  <header class="chapter-header"><div class="chapter-no">PARAMETER LAB PRO · <span id="sqcat"></span></div><h1 id="sqname">—</h1>
+   <p class="sim-beginner">まず1つのつまみだけ動かして、画像・右側の見積もり・コントラストのグラフがどう変わるかを見ましょう。グラフの縦の破線が現在の値です。画像は上下左右のドラッグでウインドウ幅・レベル、ダブルクリックで自動に戻ります。</p>
+   <p id="sqdesc"></p><div class="vend" id="vend"></div></header>
+  <div class="notice"><p><strong>すべて教育用モデルです。</strong>組織値は文献値を丸めた代表値または推定値で、仮想ファントムは解析的な図形で描いた模式図です。患者画像・診断閾値・装置の表示値（撮像時間・SAR）を再現するものではありません。メーカー名称は確認度つきで表示しています。</p></div>
+  <div class="pro-top one" id="protop">
+    <section class="sim-card" id="learncard" hidden></section>
+    <section class="sim-card" id="sim-setup"><h2>部位・病変・装置</h2>
+     <div class="phchips" id="phantoms" role="group" aria-label="部位"></div>
+     <div class="les" id="les"></div><div id="popts" class="sim-controls"></div>
+     <div class="sim-controls" id="sys"></div></section>
+  </div>
+  <div class="pro-grid">
+   <div class="pro-params">
+    <section class="sim-card" id="sim-params"><h2>撮像パラメータ <button type="button" class="chipbtn" id="reset" style="float:right;font-size:12.5px">既定値に戻す</button></h2>
+     <div class="gtools"><button type="button" id="gopen">すべて開く</button><button type="button" id="gclose">すべて閉じる</button><span>見出しを押すと開閉します</span></div>
+     <div id="params"></div>
+     <p class="sim-note">最短値より短い TE・TR・エコー間隔は計算時に補正し、数値を黄色で示します。範囲は装置の上限より広く取ってあり、実機で設定できない値も含みます。</p></section>
+   </div>
+   <div class="pro-side"><aside class="pro-out" aria-label="画像と見積もり">
+    <div class="sim-output"><div class="sim-image"><h3><span id="imgttl">—</span><span class="busy" id="busy"></span></h3>
+      <div class="stage" id="stage"></div>
+      <div class="vtools"><label><input type="checkbox" id="showK"> k空間</label><label><input type="checkbox" id="showLab"> 組織境界</label><label><input type="checkbox" id="color"> カラー</label>
+       <button type="button" id="pin">比較用に固定</button><button type="button" id="auto">自動WW/WL</button><button type="button" id="save">PNG保存</button></div>
+      <div class="thumbs" id="thumbs"></div>
+      <div class="hover" id="hover">画像上にカーソルを置くと、組織名・信号・T1/T2 を表示します。</div></div>
+     <div class="metrics" id="metrics"></div><ul class="warns" id="warns"></ul></div>
+    </aside><aside class="pro-chart" aria-label="コントラストのグラフ"><div class="sim-output chartbox"><h3 style="font-size:14px;margin:0 0 8px">コントラストのグラフ</h3><div id="chartctl"></div><canvas id="chartcv" style="width:100%;display:block;background:var(--ch-bg,#fff);border:1px solid var(--rt-line);border-radius:4px"></canvas><div class="hover" id="chartnote"></div></div><div id="kfill" hidden></div>
+   </aside></div>
+  </div>
+  <section class="sim-card" id="sim-tissue"><h2>組織ごとの信号（現在の画像）</h2>
+   <div class="data-table-wrap"><table class="data-table sim-table"><thead><tr><th>教育用組織</th><th>T1 / T2 / T2*（現在の磁場・造影後）</th><th>相対信号</th><th>推定SNR</th><th>前回比</th></tr></thead><tbody id="bars"></tbody></table></div>
+   <p class="sim-note">各組織の画素の中央値。相対信号は最大を 100 とした値。推定SNRは中央値÷雑音の標準偏差で、表面コイルの感度補正や並列画像の g 因子の場所による差は含みません。前回比は、直前の条件の同じ画像との比較です。</p></section>
+ </div>
+ <div class="view" id="v-names" hidden><header class="chapter-header"><div class="chapter-no">REFERENCE</div><h1>シーケンス名の対応（メーカー別）</h1><p>確認度：<span class="cf o">公開資料</span> メーカーの公開資料で名称を確認／<span class="cf c">比較表</span> ベンダー比較表で確認（列の読み取りに曖昧さあり）／<span class="cf x">要確認</span> 名称を確認できていない。名称はソフトウェアのバージョン・地域で異なることがあります。院内装置のプロトコル名で確認してください。</p></header>
+  <section class="sim-card"><h2>シーケンス</h2><div class="data-table-wrap" id="nametbl"></div></section>
+  <section class="sim-card"><h2>加速・オプション</h2><div class="data-table-wrap" id="opttbl"></div><h3>出典</h3><ul id="namesrc" style="font-size:14px"></ul></section></div>
+ <div class="view" id="v-tissue" hidden><header class="chapter-header"><div class="chapter-no">REFERENCE</div><h1>組織パラメータ（教育用の代表値）</h1><p>T1・T2 は文献の報告値を丸めた代表値、または文献値をもとにした教育用の推定値（出典欄が est）です。個人差・測定法による差が大きく、診断や定量の基準値ではありません。</p></header>
+  <section class="sim-card"><div class="data-table-wrap" id="tisstbl"></div><h3>文献</h3><ul id="refs" style="font-size:14px"></ul></section></div>
+ <div class="view" id="v-about" hidden><header class="chapter-header"><div class="chapter-no">HOW TO USE</div><h1>このツールの使い方と注意</h1><p>全身の仮想ファントムで、撮像条件を変えたときの画像と撮像時間・SNR・SAR の変化を確かめる教育用シミュレーターです。</p></header><section class="sim-card" id="about"></section></div>
+ <footer class="footer"><p>院内教育用 · 全身・網羅版（2026年11月） · 外部ライブラリを使わず、すべての計算をこのファイル内で行います。既存の「MRIシーケンス読本」内のパラメータシミュレーターはそのまま残しています。</p></footer>
+</div></main>
+</div>
+<script id="engine-src" type="text/plain">/*__ENGINE__*/</script>
+<script>/*__ENGINE_RUN__*/</script>
+<script>/*__UI__*/</script>
+</body>
+</html>

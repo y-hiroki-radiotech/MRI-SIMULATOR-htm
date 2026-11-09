@@ -1,0 +1,175 @@
+/* mri-sequence-book テーマ（RadTools 統一デザイン）
+ * 変数マップ: --ink→--rt-ink, --muted→--rt-muted, --nav→--rt-navy, --teal/--tealLight→--rt-accent/--rt-accent-soft, --bg→--rt-bg, --line→--rt-line, --blue→--rt-link,
+ *   --amber→--rt-warn, --serif(游明朝)→--rt-font(ゴシック統一)。サイドバーは元から暗い紺なので --rt-navy を踏襲し、アクティブ項目はティールの左バー。
+ * ヒーロー(.chapter-header)=紺グラデ+白文字+ティール下線。h2.section-title=ティール左バー。表=rt表仕様(見出し行 surface-2+紺文字+2px下罫線、行ホバーで薄ティール)。
+ * 難易度ラベル(基本/応用/研究/入門/発展)は JS が付ける .rt-level を共通配色(緑/青/紫)で表示。ボタン・チップ・タブは 999px(目次チップのみ6px)、アクティブ=ティール地+白文字。
+ * 研究欄の藍色は --rt-link 系の薄青に寄せ、シミュレーターの図(canvas)・論文図の暗背景・病変/信号の意味色は変更しない。スマホ(≤760px)はドロワーを共通ヘッダの下から開始し、章内ナビを1行スクロール化。
+ * 11px以下の注記は12pxへ引き上げ、コントラスト不足(.evidence等)を修正。 */
+:root{
+  --ink:var(--rt-ink); --muted:var(--rt-muted); --nav:var(--rt-navy); --teal:var(--rt-accent); --tealLight:var(--rt-accent-soft);
+  --bg:var(--rt-bg); --line:var(--rt-line); --blue:var(--rt-link); --amber:var(--rt-warn); --paper:var(--rt-surface); --serif:var(--rt-font);
+}
+body{font-family:var(--rt-font);color:var(--rt-ink);background:var(--rt-bg);font-size:16px;line-height:1.85;font-feature-settings:"palt" 1}
+a{color:var(--rt-link)}
+button:focus-visible,a:focus-visible,summary:focus-visible,.glossary-term:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #f2b705;outline-offset:3px}
+.book-search:focus-visible{outline:3px solid #f2b705;outline-offset:2px}
+
+/* ---------- サイドバー（暗い紺を踏襲） ---------- */
+.sidebar{background:var(--rt-navy);padding-bottom:72px}
+.brand{border-bottom-color:rgba(255,255,255,.16)}
+.brand-name{font-weight:700}
+.brand-meta,.nav-group,.search-count{color:#b3c7d8}
+.nav-btn{color:var(--rt-navy-ink);font-size:14px}
+.nav-btn:hover{background:rgba(255,255,255,.09)}
+.nav-btn.active{background:rgba(83,200,197,.16);color:#fff;box-shadow:inset 3px 0 #53c8c5}
+.nav-btn small{font-size:12px;color:#9be8e3}
+.search-result{font-size:13px}
+.search-result span{font-size:12px;color:#9be8e3}
+.book-search{border-radius:999px;border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.08);padding:9px 12px;font-size:13px;text-overflow:ellipsis}
+.book-search::placeholder{color:#c3d3e0}
+
+/* ---------- 上部バー・ヒーロー ---------- */
+.topbar{background:var(--rt-surface);border-bottom:1px solid var(--rt-line)}
+.print-button,.menu-btn{border:1px solid var(--rt-line-strong);background:var(--rt-surface);color:var(--rt-ink-2);border-radius:999px;padding:6px 14px;min-height:36px}
+.print-button:hover,.menu-btn:hover{background:var(--rt-accent-soft);border-color:var(--rt-accent)}
+.chapter-header{background:linear-gradient(135deg,var(--rt-navy),var(--rt-navy-2));color:#fff;border:0;border-bottom:4px solid var(--rt-accent);border-radius:var(--rt-radius);padding:26px 32px 24px;margin-bottom:26px;box-shadow:var(--rt-shadow)}
+.chapter-header h1{font-family:var(--rt-font);font-size:30px;font-weight:800;color:#fff;margin:0 0 6px;letter-spacing:.01em}
+.chapter-no{color:#8fe3df;margin-bottom:6px}
+.chapter-header p{color:#dbe7f2;max-width:860px}
+.chapter-header p:last-child{margin-bottom:0}
+.chapter-header p.sim-beginner{color:var(--rt-ink);background:var(--rt-surface);border-left:4px solid var(--rt-accent);border-radius:var(--rt-radius-sm);padding:12px 16px;margin-top:14px}
+
+/* ---------- 見出し ---------- */
+.section-title{font-family:var(--rt-font);font-size:22px;font-weight:800;color:var(--rt-navy);border-left:5px solid var(--rt-accent);padding:2px 0 2px 12px;margin:40px 0 16px}
+.section-title.research-heading{color:var(--rt-navy);border-left-color:var(--rt-link)}
+.sequence h2{color:var(--rt-navy)}
+.summary-box h2,.beginner-guide h2{color:var(--rt-navy)}
+.subsection-label{color:var(--rt-accent-dark);border-bottom-color:var(--rt-accent-line)}
+.detail-block h3,.glossary-detail h3{color:var(--rt-navy)}
+.section-help{color:var(--rt-ink-2)}
+
+/* ---------- カード・箱 ---------- */
+.sequence,.routine-card,.sim-card,.glossary-card,.overview{background:var(--rt-surface);border-color:var(--rt-line);border-radius:var(--rt-radius);box-shadow:var(--rt-shadow)}
+.routine-card{border-left:5px solid var(--rt-accent)}
+.summary-box{background:#f1f5fb;border:1px solid var(--rt-line);border-left:5px solid var(--rt-link);border-radius:var(--rt-radius-sm)}
+.beginner-guide{background:var(--rt-accent-soft);border-color:var(--rt-accent-line);border-left:5px solid var(--rt-accent);border-radius:var(--rt-radius)}
+.beginner-guide .rt-box{background:var(--rt-surface)}
+.beginner-sequence{background:var(--rt-accent-soft);border-color:var(--rt-accent-line);border-radius:var(--rt-radius-sm)}
+.beginner-sequence h3{color:var(--rt-accent-dark)}
+.first-look{border-top-color:var(--rt-accent-line)}
+.routine-start,.glossary-plain,.sim-beginner{background:var(--rt-accent-soft);border-left-color:var(--rt-accent)}
+.takeaway{background:var(--rt-surface-2);border:1px solid var(--rt-line);border-radius:var(--rt-radius-sm)}
+.takeaway.pitfalls{background:var(--rt-warn-soft);border-color:var(--rt-warn-line)}
+.notice{background:var(--rt-warn-soft);border-color:var(--rt-warn-line);color:var(--rt-ink);border-radius:var(--rt-radius-sm)}
+.vendor-details summary,.text-section h3{color:var(--rt-navy)}
+.vendor-cell{background:var(--rt-surface-2);border-color:var(--rt-line);border-radius:var(--rt-radius-sm)}
+.evidence{color:var(--rt-muted);border-top-color:var(--rt-line)}
+.text-section,.vendor-details,.extra-content{border-top-color:var(--rt-line)}
+.sequence-detail>summary,.chapter-background>summary{background:var(--rt-surface-2);border:1px solid var(--rt-line-strong);border-radius:var(--rt-radius-sm);color:var(--rt-navy)}
+.sequence-detail>summary:hover,.chapter-background>summary:hover{background:var(--rt-accent-soft);border-color:var(--rt-accent)}
+
+/* ---------- 研究欄（藍→薄青に統一） ---------- */
+.research-box,.research-intro{background:#f1f5fb;border:1px solid var(--rt-line-strong);color:var(--rt-ink-2);border-radius:var(--rt-radius-sm)}
+.research-box{color:var(--rt-ink)}
+.research-tag{font-size:12px;color:var(--rt-link);font-weight:700}
+.research-limit{border-top-color:var(--rt-line-strong);color:var(--rt-ink-2)}
+.research-detail>summary{color:var(--rt-navy)}
+.research-heading{color:var(--rt-navy)}
+.research-jump a,.research-evidence>p>a{color:var(--rt-link)}
+.routine-group{color:#5b3fa8;font-size:12px}
+
+/* ---------- ラベル（難易度 rt-level／タグ） ---------- */
+.tag{font-size:12px;font-weight:600;background:var(--rt-surface-2);color:var(--rt-ink-2);border:1px solid var(--rt-line);border-radius:999px;padding:2px 10px;line-height:1.6}
+.rt-level,.tag.rt-level{font-size:12px;font-weight:700;letter-spacing:.04em}
+.tag.rt-level.rt-level--basic{background:#e3f4ea;color:#17623d;border-color:#a8dcc3}
+.tag.rt-level.rt-level--mid{background:#e8eefb;color:#2a4d98;border-color:#b8c9ee}
+.tag.rt-level.rt-level--adv,.tag.rt-level.research-badge{background:#f1e9fb!important;color:#5b3fa8!important;border-color:#d6c9f2}
+.toc-kind{font-size:12px;color:var(--rt-accent-dark);font-weight:700}
+.glossary-category{font-size:12px;background:var(--rt-accent-soft);color:var(--rt-accent-dark);border-radius:999px;padding:2px 10px}
+.license{font-size:12px;color:var(--rt-accent-dark);border:1px solid var(--rt-accent-line);background:var(--rt-surface);border-radius:999px;padding:1px 8px}
+
+/* ---------- ボタン・チップ・タブ ---------- */
+.reading-choice button,.glossary-learning button,.sim-presets button,.chapter-jumps a{border:1px solid var(--rt-line-strong);background:var(--rt-surface);color:var(--rt-ink);border-radius:999px;min-height:36px;padding:6px 16px;line-height:1.5;font-weight:600}
+.reading-choice button:hover,.glossary-learning button:hover,.sim-presets button:hover,.chapter-jumps a:hover{background:var(--rt-accent-soft);border-color:var(--rt-accent);color:var(--rt-accent-dark)}
+.reading-choice button[aria-pressed=true]{background:var(--rt-accent);border-color:var(--rt-accent);color:#fff}
+.reading-choice>span{color:var(--rt-navy)}
+.reading-choice p{color:var(--rt-muted);font-size:13px}
+.chapter-jumps{background:var(--rt-bg);border-bottom-color:var(--rt-line);align-items:center}
+.chapter-jumps .quiet-link{color:var(--rt-accent-dark)}
+.toc a{border-radius:var(--rt-radius-sm);background:var(--rt-surface);border-color:var(--rt-line);color:var(--rt-ink-2)}
+.toc a:hover{background:var(--rt-accent-soft);border-color:var(--rt-accent);color:var(--rt-accent-dark)}
+.quiet-link{color:var(--rt-accent-dark)}
+.ref-link{color:var(--rt-link);font-weight:600}
+.glossary-term{border-bottom-color:var(--rt-accent)}
+.glossary-term:hover{background:var(--rt-accent-soft);color:var(--rt-accent-dark)}
+.trouble-search,.glossary-filters input,.glossary-filters select,.sim-control select{border:1px solid var(--rt-line-strong);border-radius:var(--rt-radius-sm);background:var(--rt-surface);color:var(--rt-ink)}
+.sim-control{color:var(--rt-ink-2)}
+.sim-control output{color:var(--rt-accent-dark)}
+.sim-control input[type=range]{accent-color:var(--rt-accent)}
+.sim-readout strong{color:var(--rt-accent-dark)}
+
+/* ---------- 表（rt表仕様） ---------- */
+.data-table-wrap{border:1px solid var(--rt-line);border-radius:var(--rt-radius-sm);background:var(--rt-surface);overflow:auto;-webkit-overflow-scrolling:touch}
+.data-table{border-collapse:collapse;background:var(--rt-surface)}
+.data-table th,.data-table td{border:0;border-bottom:1px solid var(--rt-line)}
+.data-table th{background:var(--rt-surface-2);color:var(--rt-navy);font-size:13px;border-bottom:2px solid var(--rt-line-strong)}
+.data-table tbody tr:last-child td{border-bottom:0}
+.data-table tbody tr:hover td{background:#eef8f7}
+.data-table .tag{white-space:nowrap}
+.data-table .quiet-link{text-align:left}
+.howto-legend td:first-child,.howto-legend th:first-child{min-width:5.5em;width:6em}
+.howto-chapters td,.howto-chapters th{min-width:0}
+.howto-chapters td:first-child,.howto-chapters th:first-child{min-width:11em}
+.howto-chapters td:nth-child(2){min-width:16em}
+.howto-chapters td:nth-child(n+3),.howto-chapters th:nth-child(n+3){width:4.8em;text-align:center}
+.howto-chapters td:nth-child(n+3){font-weight:400}
+
+/* ---------- 図・参考文献 ---------- */
+.figure{border-color:var(--rt-line);border-radius:var(--rt-radius);background:var(--rt-surface);box-shadow:var(--rt-shadow)}
+.figure-credit{color:var(--rt-muted)}
+.original-diagram figcaption{font-size:12px;color:var(--rt-muted)}
+.ref-item{border-bottom-color:var(--rt-line)}
+.footer{border-top-color:var(--rt-line);color:var(--rt-muted)}
+.rt-howto{margin-top:0}
+
+/* ---------- ダイアログ ---------- */
+.dialog{border:0;border-radius:var(--rt-radius);box-shadow:0 28px 70px -24px rgba(18,40,62,.6);color:var(--rt-ink)}
+.dialog::backdrop{background:rgba(18,40,62,.72)}
+.dialog-header{background:var(--rt-surface-2);border-bottom:1px solid var(--rt-line-strong);font-weight:800;color:var(--rt-navy)}
+.dialog-close{border:1px solid var(--rt-line-strong);background:var(--rt-surface);border-radius:999px;padding:6px 16px;min-height:36px;font-weight:600}
+.dialog-close:hover{background:var(--rt-accent-soft);border-color:var(--rt-accent)}
+
+sup,sub{font-size:12px;line-height:0}
+
+/* ---------- 画面幅別 ---------- */
+@media (max-width:1100px){.chapter-header{padding:22px 24px 20px}}
+@media (max-width:760px){
+  .sidebar{padding-top:calc(var(--rt-bar-h) + 3px + 22px);padding-bottom:40px}
+  .chapter-header{padding:18px 18px 16px;border-radius:var(--rt-radius-sm)}
+  .chapter-header h1{font-size:24px}
+  .section-title{font-size:20px;margin-top:32px}
+  .chapter-jumps{flex-wrap:nowrap;overflow-x:auto;gap:8px;-webkit-overflow-scrolling:touch}
+  .chapter-jumps a,.chapter-jumps .quiet-link{flex:none;white-space:nowrap;margin-left:0}
+  .reading-choice button{min-height:40px}
+  .ref-link{display:inline-block;min-height:36px;padding:7px 8px}
+  .quiet-link{display:inline-block;padding:8px 0}
+  .chapter-jumps .quiet-link{padding:8px 10px}
+  .vendor-details summary,.research-detail>summary,.sim-card summary{padding:8px 0;min-height:36px}
+  .sim-control input[type=range]{min-height:36px}
+  .sim-control select{padding:9px 7px}
+  .toc a{display:inline-block;min-height:36px;padding:7px 12px}
+  .print-button{display:none}
+  .topbar .menu-btn{min-height:40px;padding:6px 16px}
+  .howto-chapters td:nth-child(n+3),.howto-chapters th:nth-child(n+3){width:3.6em;padding-left:8px;padding-right:8px}
+  .dialog-close{min-height:40px}
+}
+
+/* ---------- 印刷 ---------- */
+@media print{
+  body,.main,.content{background:#fff!important;color:#000!important}
+  .chapter-header{background:none!important;color:#000!important;border:0;border-bottom:2px solid #000;box-shadow:none;padding:0 0 8px;border-radius:0}
+  .chapter-header h1,.chapter-header p,.chapter-no{color:#000!important}
+  .sidebar,.chapter-jumps,.reading-choice,.book-search,.print-button,.rt-howto__print-hide{display:none!important}
+  .sequence,.routine-card,.sim-card,.glossary-card,.overview,.figure{box-shadow:none}
+  .data-table-wrap{border:0;overflow:visible}
+}

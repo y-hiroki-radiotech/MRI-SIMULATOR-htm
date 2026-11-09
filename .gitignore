@@ -1,0 +1,4 @@
+tests/out/
+__pycache__/
+i18n/missing_*.json
+.DS_Store

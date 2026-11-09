@@ -1,0 +1,103 @@
+/* ===== 配色テーマ（html[data-theme=…]）。既定（属性なし）は RadTools のネイビー×ティール ===== */
+
+/* ---------- B：ライト・クリニカル（白基調・ブルー） ---------- */
+html[data-theme=clinical]{
+  --rt-navy:#0f172a; --rt-navy-2:#1e293b; --rt-navy-ink:#f1f5f9;
+  --rt-accent:#2563eb; --rt-accent-dark:#1d4ed8; --rt-accent-soft:#eaf1ff; --rt-accent-line:#bcd0fb;
+  --rt-bg:#f5f7fb; --rt-surface:#ffffff; --rt-surface-2:#f8fafc;
+  --rt-ink:#0f172a; --rt-ink-2:#334155; --rt-muted:#64748b; --rt-line:#e2e8f0; --rt-line-strong:#cbd5e1; --rt-link:#1d4ed8;
+  --ch-cursor:#0f172a;
+  --ch-pal:#2563eb,#e11d48,#059669,#d97706,#7c3aed,#0891b2,#db2777,#65a30d,#475569,#ea580c,#4f46e5,#0d9488,#b91c1c,#a16207;
+}
+html[data-theme=clinical] .sidebar{background:#ffffff;color:var(--rt-ink);border-right:1px solid var(--rt-line)}
+html[data-theme=clinical] .brand{border-bottom-color:var(--rt-line)}
+html[data-theme=clinical] .brand-mark{color:var(--rt-accent)}
+html[data-theme=clinical] .brand-name{color:var(--rt-ink)}
+html[data-theme=clinical] .brand-meta,html[data-theme=clinical] .nav-group{color:var(--rt-muted)}
+html[data-theme=clinical] .nav-btn{color:var(--rt-ink-2)}
+html[data-theme=clinical] .nav-btn:hover{background:#f1f5f9}
+html[data-theme=clinical] .nav-btn.active{background:var(--rt-accent-soft);color:var(--rt-accent-dark);box-shadow:inset 3px 0 var(--rt-accent)}
+html[data-theme=clinical] .nav-btn small{color:var(--rt-accent)}
+html[data-theme=clinical] .book-search{background:#f8fafc;color:var(--rt-ink);border-color:var(--rt-line-strong)}
+html[data-theme=clinical] .book-search::placeholder{color:var(--rt-muted)}
+html[data-theme=clinical] .chapter-header{background:#ffffff;color:var(--rt-ink);border:1px solid var(--rt-line);border-top:4px solid var(--rt-accent);box-shadow:0 1px 2px rgba(15,23,42,.05)}
+html[data-theme=clinical] .chapter-header h1{color:var(--rt-ink)}
+html[data-theme=clinical] .chapter-header p,html[data-theme=clinical] .chapter-header .vend span{color:var(--rt-ink-2)}
+html[data-theme=clinical] .chapter-no,html[data-theme=clinical] .chapter-header .vend b{color:var(--rt-accent)}
+html[data-theme=clinical] .chapter-header p.sim-beginner{background:var(--rt-accent-soft);border-color:var(--rt-accent-line)}
+html[data-theme=clinical] .chapter-header .cf.o{background:#e8f5ee;color:#166534;border-color:#a7d9bd}
+html[data-theme=clinical] .chapter-header .cf.c{background:#fff4e0;color:#92400e;border-color:#f1cf92}
+html[data-theme=clinical] .chapter-header .cf.x{background:#fdecee;color:#9f1239;border-color:#f3b8c2}
+
+/* ---------- C：ダーク（読影室向け） ---------- */
+html[data-theme=dark]{
+  color-scheme:dark;
+  --rt-navy:#0a0e14; --rt-navy-2:#121a26; --rt-navy-ink:#e6edf3;
+  --rt-accent:#2dd4bf; --rt-accent-dark:#5eead4; --rt-accent-soft:#0f2e2c; --rt-accent-line:#1f5c56;
+  --rt-bg:#0d1117; --rt-surface:#151b23; --rt-surface-2:#1b2230;
+  --rt-ink:#e6edf3; --rt-ink-2:#c9d4df; --rt-muted:#8d9aab; --rt-line:#28323f; --rt-line-strong:#3a4656; --rt-link:#7cb7ff;
+  --rt-warn:#f5c26b; --rt-warn-soft:#2b2312; --rt-warn-line:#5c4718;
+  --rt-danger:#ff8a96; --rt-danger-soft:#2e161a; --rt-danger-line:#5e2a32;
+  --rt-ok:#6ee7a8; --rt-ok-soft:#10271c; --rt-ok-line:#245a3e;
+  --rt-shadow:0 1px 2px rgba(0,0,0,.4),0 8px 22px -12px rgba(0,0,0,.7);
+  --ch-bg:#0f141b; --ch-text:#9fb0c2; --ch-text2:#c9d4df; --ch-grid:#1f2833; --ch-zero:#4b5b6e; --ch-frame:#3a4656; --ch-frame2:#28323f; --ch-cursor:#e6edf3; --ch-dot:#0f141b;
+  --ch-pal:#2dd4bf,#fb923c,#60a5fa,#f87171,#c084fc,#4ade80,#fbbf24,#22d3ee,#f472b6,#a3e635,#94a3b8,#facc15,#818cf8,#fca5a5;
+}
+html[data-theme=dark] body,html[data-theme=dark] .main{background:var(--rt-bg);color:var(--rt-ink)}
+html[data-theme=dark] .topbar{background:var(--rt-surface);border-bottom-color:var(--rt-line)}
+html[data-theme=dark] .sidebar{background:#0a0e14;border-right:1px solid var(--rt-line)}
+html[data-theme=dark] .nav-btn:hover{background:#18212d}
+html[data-theme=dark] .nav-btn.active{background:rgba(45,212,191,.14);box-shadow:inset 3px 0 var(--rt-accent)}
+html[data-theme=dark] .chapter-header{background:linear-gradient(135deg,#111a26,#0f2230);border-bottom-color:var(--rt-accent)}
+html[data-theme=dark] .chapter-header p.sim-beginner{background:#0f1720;color:var(--rt-ink-2);border-color:var(--rt-accent-line)}
+html[data-theme=dark] .notice{background:var(--rt-warn-soft);border-color:var(--rt-warn-line);color:var(--rt-ink-2)}
+html[data-theme=dark] .data-table{background:var(--rt-surface)}
+html[data-theme=dark] .data-table th{background:#1b2532;color:var(--rt-ink)}
+html[data-theme=dark] .data-table th,html[data-theme=dark] .data-table td{border-color:var(--rt-line)}
+html[data-theme=dark] .data-table tbody tr:hover td{background:#16232c}
+html[data-theme=dark] input,html[data-theme=dark] select,html[data-theme=dark] textarea{background:var(--rt-surface-2);color:var(--rt-ink);border-color:var(--rt-line-strong)}
+html[data-theme=dark] .print-button,html[data-theme=dark] .menu-btn{background:var(--rt-surface-2);color:var(--rt-ink-2);border-color:var(--rt-line-strong)}
+html[data-theme=dark] .cv{border-color:var(--rt-line)}
+html[data-theme=dark] .footer{border-top-color:var(--rt-line)}
+
+/* ---------- D：ウォーム（生成り×テラコッタ） ---------- */
+html[data-theme=warm]{
+  --rt-navy:#2a2420; --rt-navy-2:#3b302a; --rt-navy-ink:#f5ede4;
+  --rt-accent:#b4532a; --rt-accent-dark:#8f3f1e; --rt-accent-soft:#f8eadf; --rt-accent-line:#e8c3ad;
+  --rt-bg:#f6f1ea; --rt-surface:#fffdf9; --rt-surface-2:#fbf6ef;
+  --rt-ink:#2b2420; --rt-ink-2:#4a3f37; --rt-muted:#7a6b5f; --rt-line:#e7ddd0; --rt-line-strong:#d6c7b5; --rt-link:#8f3f1e;
+  --ch-text:#7a6b5f; --ch-text2:#4a3f37; --ch-grid:#efe6da; --ch-frame:#d6c7b5; --ch-frame2:#e7ddd0; --ch-cursor:#2a2420; --ch-bg:#fffdf9; --ch-dot:#fffdf9;
+  --ch-pal:#b4532a,#2f6f6a,#4b5fa8,#a23b52,#7a5aa6,#5e8a2f,#c2861a,#1f7a8c,#b0487e,#6b7f2a,#6b5e55,#9a6b12,#3a5bb0,#7c2d12;
+}
+html[data-theme=warm] .sidebar{background:#2a2420}
+html[data-theme=warm] .brand{border-bottom-color:#4a3d35}
+html[data-theme=warm] .brand-meta,html[data-theme=warm] .nav-group{color:#c9b8a8}
+html[data-theme=warm] .nav-btn{color:#efe4d8}
+html[data-theme=warm] .nav-btn:hover{background:#3b302a}
+html[data-theme=warm] .nav-btn.active{background:rgba(236,147,103,.16);box-shadow:inset 3px 0 #ec9367}
+html[data-theme=warm] .nav-btn small{color:#f0b48f}
+html[data-theme=warm] .book-search{background:#3b302a;border-color:#5a4a40;color:#f5ede4}
+html[data-theme=warm] .book-search::placeholder{color:#c9b8a8}
+html[data-theme=warm] .chapter-header{background:linear-gradient(135deg,#2a2420,#4a3328)}
+html[data-theme=warm] .chapter-no,html[data-theme=warm] .chapter-header .vend b{color:#f3b58f}
+html[data-theme=warm] .chapter-header p{color:#eadfd3}
+html[data-theme=warm] .topbar{background:#fffdf9}
+html[data-theme=warm] .data-table th{background:#f3ebe0}
+html[data-theme=warm] .notice{background:#fbf1e2;border-color:#ecd3ad}
+
+/* テーマ切替 */
+.themesw{display:inline-flex;gap:4px;align-items:center;margin-right:10px}
+.themesw select{font-size:12.5px;padding:2px 6px;border-radius:6px;border:1px solid var(--rt-line-strong);background:var(--rt-surface);color:var(--rt-ink-2)}
+@media(max-width:760px){ .themesw{display:none} }
+@media print{ .themesw{display:none} }
+
+/* 共通の補正（各テーマ） */
+html[data-theme] .sim-output{background:var(--rt-surface-2);border-color:var(--rt-line)}
+html[data-theme] .sim-card{background:var(--rt-surface);border-color:var(--rt-line)}
+html[data-theme] .chapter-header p.sim-beginner{color:var(--rt-ink-2)}
+html[data-theme=dark] .chapter-header p.sim-beginner{background:#0f1720;color:var(--rt-ink-2)}
+html[data-theme=dark] .chipbtn,html[data-theme=dark] .vtools button,html[data-theme=dark] .gtools button{background:var(--rt-surface-2);color:var(--rt-ink-2);border-color:var(--rt-line-strong)}
+html[data-theme=dark] .chipbtn[aria-pressed=true]{background:var(--rt-accent);color:#04201d;border-color:var(--rt-accent)}
+html[data-theme=dark] .kfill{background:var(--rt-surface-2)}
+html[data-theme=dark] .pgrp>button.grp,html[data-theme=dark] .sim-card h2,html[data-theme=dark] .sim-card h3{color:var(--rt-ink)}
+html[data-theme=dark] .pgrp>button.grp:hover{color:var(--rt-accent-dark)}
